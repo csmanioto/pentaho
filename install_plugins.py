@@ -109,3 +109,4 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
             except Exception, e:
                 print e
 
+

@@ -66,47 +66,48 @@ def plugin_select(plugin_name):
 
 
 def download(url, dst_filename, output_folder):
-            """
-            :param url: Full URL of object
-            :param dst_filename:  Name of downloaded file in the system
-            :param output_folder: Folder to download
-            :return: full path of file downloaded
-            """
-            if output_folder == None:
-                full_output = dst_filename
-            else:
-                full_output = output_folder + '/' + dst_filename
+    """
+    :param url: Full URL of object
+    :param dst_filename:  Name of downloaded file in the system
+    :param output_folder: Folder to download
+    :return: full path of file downloaded
+    """
+    if output_folder == None:
+        full_output = dst_filename
+    else:
+        full_output = output_folder + '/' + dst_filename
 
-            try:
-                response = requests.get(url, stream=True)
-                print "Download " + url + " on " + full_output
-                if response.status_code == 200:
-                     with open(full_output, 'w') as f:
-                        for fdownload in response.iter_content():
-                            f.write(fdownload)
-                return full_output
-            except requests.ConnectionError, e:
-                    print e
+    try:
+        response = requests.get(url, stream=True)
+        print "Download " + url + " on " + full_output
+        if response.status_code == 200:
+             with open(full_output, 'w') as f:
+                for fdownload in response.iter_content():
+                    f.write(fdownload)
+        return full_output
+    except requests.ConnectionError, e:
+            print e
 
 
 
 def installPlugin (plugin_name, tmp_folder, biserver_folder):
-            """
-            :param plugin_name: Plugin ou Plugin ALias for install
-            :param tmp_folder:  TMP DIR for download
-            :param biserver_folder: Folder of instation of biserver
-            :return: OK or FAILED
-            """
-            try:
-                selected_dict =  {}
-                selected_dict = plugin_select('plugin_name')
-                plugin_name = selected_dict["plugin"]
-                plugin_url = selected_dict["url"] + selected_dict["file"]
-                _system_folder = biserver_folder + 'pentaho-soluction/system'
-                downloaded_file = download(plugin_url, 'plugin.zip', makeFolder(tmp_folder + '/' + plugin_name ))
-                removeFolder(_system_folder + '/' + plugin_name)
-                unzip(downloaded_file, _system_folder)
-            except Exception, e:
-                print e
+    """
+    :param plugin_name: Plugin ou Plugin ALias for install
+    :param tmp_folder:  TMP DIR for download
+    :param biserver_folder: Folder of instation of biserver
+    :return: OK or FAILED
+    """
+    try:
+        selected_dict =  {}
+        selected_dict = plugin_select('plugin_name')
+        plugin_name = selected_dict["plugin"]
+        plugin_url = selected_dict["url"] + selected_dict["file"]
+        _system_folder = biserver_folder + 'pentaho-soluction/system'
+        downloaded_file = download(plugin_url, 'plugin.zip', makeFolder(tmp_folder + '/' + plugin_name ))
+        removeFolder(_system_folder + '/' + plugin_name)
+        unzip(downloaded_file, _system_folder)
+    except Exception, e:
+        print e
 
 
+print "OK"

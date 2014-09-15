@@ -97,17 +97,16 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
             :param biserver_folder: Folder of instation of biserver
             :return: OK or FAILED
             """
-    try:
-        selected_dict =  {}
-        selected_dict = plugin_select('plugin_name')
-        plugin_name = selected_dict["plugin"]
-        plugin_url = selected_dict["url"] + selected_dict["file"]
+        try:
+            selected_dict =  {}
+            selected_dict = plugin_select('plugin_name')
+            plugin_name = selected_dict["plugin"]
+            plugin_url = selected_dict["url"] + selected_dict["file"]
+            _system_folder = biserver_folder + 'pentaho-soluction/system'
 
-        _system_folder = biserver_folder + 'pentaho-soluction/system'
-
-        downloaded_file = download(plugin_url, 'plugin.zip', makeFolder(tmp_folder + '/' + plugin_name ))
-        removeFolder(_system_folder + '/' + plugin_name)
-        unzip(downloaded_file, _system_folder)
-    except Exception, e:
+            downloaded_file = download(plugin_url, 'plugin.zip', makeFolder(tmp_folder + '/' + plugin_name ))
+            removeFolder(_system_folder + '/' + plugin_name)
+            unzip(downloaded_file, _system_folder)
+        except Exception, e:
             print e
 

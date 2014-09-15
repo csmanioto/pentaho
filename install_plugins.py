@@ -79,7 +79,7 @@ def download(url, dst_filename, output_folder):
 
     try:
         response = requests.get(url, stream=True)
-        print "Download " + url + " on " + full_output
+        print("Download " + url + " on " + full_output)
         if response.status_code == 200:
              with open(full_output, 'w') as f:
                 for fdownload in response.iter_content():
@@ -110,4 +110,4 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
         print(e)
 
 
-print "OK"
+print("OK")

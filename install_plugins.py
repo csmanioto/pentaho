@@ -10,8 +10,8 @@ def makeFolder (folder):
         if not os.path.exists(folder):
             os.makedirs(folder)
         return folder
-    except IOError, e:
-        print e
+    except IOError as e:
+        print(e)
 
 
 def removeFolder(folder):
@@ -22,8 +22,8 @@ def removeFolder(folder):
             else:
                 os.unlink(path)
                 os.rmdir(folder)
-    except IOError, e:
-            print e
+    except IOError as e:
+            print(e)
 
 def unzip(source_filename, dest_dir):
     with zipfile.ZipFile(source_filename) as zf:
@@ -85,8 +85,8 @@ def download(url, dst_filename, output_folder):
                 for fdownload in response.iter_content():
                     f.write(fdownload)
         return full_output
-    except requests.ConnectionError, e:
-            print e
+    except requests.ConnectionError as e:
+            print(e)
 
 
 
@@ -106,8 +106,8 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
         downloaded_file = download(plugin_url, 'plugin.zip', makeFolder(tmp_folder + '/' + plugin_name ))
         removeFolder(_system_folder + '/' + plugin_name)
         unzip(downloaded_file, _system_folder)
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
 
 
 print "OK"

@@ -3,7 +3,7 @@ import requests, zipfile,os.path
 JENKINS = "http://ci.pentaho.com/job"
 JENKINS_TRUNK = "lastSuccessfulBuild/artifact"
 TMP_FOLDER = "/tmp"
-
+#
 
 def makeFolder (folder):
     try:

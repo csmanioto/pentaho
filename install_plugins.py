@@ -68,8 +68,8 @@ def unzip(source_filename, dest_dir):
                     if word in (os.curdir, os.pardir, ''): continue
                     path = os.path.join(path, word)
                 zf.extract(member, path)
-    except IOError as e:
-        print("unzip: " + e)
+    except OSError as e:
+        print("unzip: ", e)
 
 def plugin_select(plugin_name):
 
@@ -82,20 +82,23 @@ def plugin_select(plugin_name):
     'version':
     """
 
-    dict = [{'plugin': 'marketplace', 'pluginalias': 'marketplace',    'url': 'http://ci.pentaho.com/job/marketplace/lastSuccessfulBuild/artifact/dist/', 'file': 'marketplace-TRUNK-SNAPSHOT.zip', 'version': 'trunk'},
+    dict = [
+            {'plugin': 'marketplace', 'pluginalias': 'marketplace',    'url': 'http://ci.pentaho.com/job/marketplace/lastSuccessfulBuild/artifact/dist/', 'file': 'marketplace-TRUNK-SNAPSHOT.zip', 'version': 'trunk'},
             {'plugin': 'cdf-pentaho', 'pluginalias': 'cdf', 'url': 'http://ci.pentaho.com/job/pentaho-cdf-pentaho/lastSuccessfulBuild/artifact/cdf-pentaho/dist/', 'file': 'pentaho-cdf-TRUNK-SNAPSHOT.zip', 'version': 'trunk'},
             {'plugin': 'cda-pentaho', 'pluginalias': 'cda', 'url': 'http://ci.pentaho.com/job/pentaho-cdf-pentaho/lastSuccessfulBuild/artifact/cda-pentaho/dist/', 'file': 'cda-TRUNK-SNAPSHOT.zip', 'version': 'trunk'},
             {'plugin': 'cde-pentaho', 'pluginalias': 'cde', 'url': 'http://ci.pentaho.com/job/pentaho-cde-pentaho/lastSuccessfulBuild/artifact/cde-pentaho/dist/', 'file': 'pentaho-cdf-dd-TRUNK-SNAPSHOT.zip', 'version': 'trunk'},
             {'plugin': 'cgg-pentaho', 'pluginalias': 'cgg', 'url': 'http://ci.pentaho.com/job/pentaho-cgg-pentaho/lastSuccessfulBuild/artifact/cgg-pentaho/dist/', 'file': 'cgg-TRUNK-SNAPSHOT.zip', 'version': 'trunk'},
             {'plugin': 'cfr-pentaho', 'pluginalias': 'cfr', 'url': 'http://ci.pentaho.com/job/pentaho-cfr-pentaho/lastSuccessfulBuild/artifact/cfr-pentaho/dist/', 'file': 'cfr-TRUNK-TRUNK-SNAPSHOT.zip','version': 'trunk' },
             {'plugin': 'sparkl', 'pluginalias': 'sparkl',   'url': 'http://ci.pentaho.com/job/SparkllastSuccessfulBuild/artifact/dist/', 'file': 'sparkl-TRUNK-SNAPSHOT.zip', 'version': 'TRUNK'},
-            {'plugin': 'saiku', 'pluginalias': 'saiku',     'url': 'http://meteorite.bi/downloads/', 'file': 'saiku-plugin-2.6.zip', 'version': 'stable'}]
+            {'plugin': 'saiku', 'pluginalias': 'saiku',     'url': 'http://meteorite.bi/downloads/', 'file': 'saiku-plugin-2.6.zip', 'version': 'stable'}
+            ]
 
     for key in dict:
         if (key["plugin"] == plugin_name)  or (key["pluginalias"] == plugin_name):
             return key
-        else:
-            return dict
+
+    if len(plugin_name) == 0:
+        return dict
 
 def download(url, dst_filename, output_folder):
     """
@@ -173,8 +176,6 @@ def main(argv):
         paramenters, values = getopt.getopt(argv,"hp:b:t:",["help","plugin=","bihome=","tmpdir="])
     except getopt.GetoptError:
         displayHelp(2)
-
-
 
     if len(paramenters) == 0:
         displayHelp(2)

@@ -184,11 +184,11 @@ def main(argv):
          if opt in ('-h', '--help'):
             help
          if opt in ('-p', '--plugin'):
-             plugin_name = value
+             plugin_name = arg
          if opt in ('-b', '--bihome'):
-             biserver_home = value
+             biserver_home = arg
          if opt in ('-t', '--tmpdir'):
-             tmpdir = value
+             tmpdir = arg
 
     if (tmpdir == None) or (tmpdir == ''):
            tmpdir= TMP_FOLDER
@@ -196,7 +196,7 @@ def main(argv):
     if (biserver_home == None) or (biserver_home == ''):
         biserver_home = BISERVER_HOME
 
-    #installPlugin(plugin_name, tmpdir, biserver_home)
+    installPlugin(plugin_name, tmpdir, biserver_home)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

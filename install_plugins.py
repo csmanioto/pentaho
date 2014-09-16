@@ -102,7 +102,7 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
         selected_dict = plugin_select('plugin_name')
         plugin_name = selected_dict["plugin"]
         plugin_url = selected_dict["url"] + selected_dict["file"]
-        _system_folder = biserver_folder + 'pentaho-soluction/system'
+        _system_folder = biserver_folder + 'pentaho-solutions/system'
         downloaded_file = download(plugin_url, 'plugin.zip', makeFolder(tmp_folder + '/' + plugin_name ))
         removeFolder(_system_folder + '/' + plugin_name)
         unzip(downloaded_file, _system_folder)
@@ -110,4 +110,4 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
         print(e)
 
 
-installPlugin("marketplace")
+installPlugin("marketplace", "/tmp/", "/opt/pentaho/biserver-ce/")

@@ -30,7 +30,7 @@ def removeFolder(folder):
 
 def unzip(source_filename, dest_dir):
     try:
-        print("Unziping... % on %", source_filename, dest_dir)
+        print("Unziping  % on %" % (source_filename, dest_dir))
         with zipfile.ZipFile(source_filename) as zf:
             for member in zf.infolist():
                 # Path traversal defense copied from
@@ -118,7 +118,7 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
         downloaded_file = download(plugin_url, 'plugin.zip', makeFolder(tmp_folder + '/' + plugin_name ))
         removeFolder(_system_folder + '/' + plugin_name)
         unzip(downloaded_file, _system_folder)
-        print("Plugin % installed", plugin_name)
+        print("Plugin % installed" % plugin_name)
     except Exception as e:
         print("InstallPluing: ", e)
 

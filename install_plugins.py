@@ -20,10 +20,10 @@ def removeFolder(folder):
         for path in (os.path.join(folder,f) for f in os.listdir(folder)):
             print(path)
             if os.path.isdir(path):
-                removeFolder(folder)
+                removeFolder(path)
             else:
                 os.unlink(path)
-                os.rmdir(folder)
+        os.rmdir(folder)
     except IOError as e:
             print(e)
 

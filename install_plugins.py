@@ -11,7 +11,7 @@ def makeFolder (folder):
             os.makedirs(folder)
         return folder
     except IOError as e:
-        print(e)
+        print("makeFolder: " + e)
 
 
 def removeFolder(folder):
@@ -26,18 +26,21 @@ def removeFolder(folder):
             print(e)
 
 def unzip(source_filename, dest_dir):
-    with zipfile.ZipFile(source_filename) as zf:
-        for member in zf.infolist():
-            # Path traversal defense copied from
-            # http://hg.python.org/cpython/file/tip/Lib/http/server.py#l789
-            words = member.filename.split('/')
-            path = dest_dir
-            for word in words[:-1]:
-                drive, word = os.path.splitdrive(word)
-                head, word = os.path.split(word)
-                if word in (os.curdir, os.pardir, ''): continue
-                path = os.path.join(path, word)
-            zf.extract(member, path)
+    try:
+        with zipfile.ZipFile(source_filename) as zf:
+            for member in zf.infolist():
+                # Path traversal defense copied from
+                # http://hg.python.org/cpython/file/tip/Lib/http/server.py#l789
+                words = member.filename.split('/')
+                path = dest_dir
+                for word in words[:-1]:
+                    drive, word = os.path.splitdrive(word)
+                    head, word = os.path.split(word)
+                    if word in (os.curdir, os.pardir, ''): continue
+                    path = os.path.join(path, word)
+                zf.extract(member, path)
+    except IOError as e:
+        print("unzip: " + e)
 
 
 def plugin_select(plugin_name):
@@ -86,8 +89,7 @@ def download(url, dst_filename, output_folder):
                     f.write(fdownload)
         return full_output
     except requests.ConnectionError as e:
-            print(e)
-
+        print("download: " + e)
 
 
 def installPlugin (plugin_name, tmp_folder, biserver_folder):
@@ -107,7 +109,7 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
         removeFolder(_system_folder + '/' + plugin_name)
         unzip(downloaded_file, _system_folder)
     except Exception as e:
-        print(e)
+        print("installPlugin: " + e)
 
 
 installPlugin("marketplace", "/tmp/", "/opt/pentaho/biserver-ce/")

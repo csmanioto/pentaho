@@ -110,4 +110,4 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
         print(e)
 
 
-print("OK")
+installPlugin("marketplace")

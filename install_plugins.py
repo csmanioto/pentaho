@@ -1,9 +1,35 @@
 import requests, zipfile,os, sys, getopt
 
+'''
+ *
+ * install_plugin.py
+ *
+ * Copyright (c) 2014, CARLOS EDUARDO SMANIOTO. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
+ */
+
+ Email: csmanioto@gmail.com
+
+'''
+
 JENKINS = "http://ci.pentaho.com/job"
 JENKINS_TRUNK = "lastSuccessfulBuild/artifact"
-TMP_FOLDER = "/tmp"
-#
+TMP_FOLDER = "/tmp/pytinstall/"
+BISERVER_HOME = "/opt/pentaho/biserver-ce/"
 
 def makeFolder (folder):
     try:
@@ -12,7 +38,6 @@ def makeFolder (folder):
         return folder
     except IOError as e:
         print("makeFolder: " + e)
-
 
 def removeFolder(folder):
     try:
@@ -46,7 +71,6 @@ def unzip(source_filename, dest_dir):
     except IOError as e:
         print("unzip: " + e)
 
-
 def plugin_select(plugin_name):
 
     """
@@ -72,7 +96,6 @@ def plugin_select(plugin_name):
             return key
         else:
             return dict
-
 
 def download(url, dst_filename, output_folder):
     """
@@ -103,7 +126,6 @@ def download(url, dst_filename, output_folder):
     except requests.ConnectionError as e:
         print("download: ", e)
 
-
 def installPlugin (plugin_name, tmp_folder, biserver_folder):
     """
     :param plugin_name: Plugin ou Plugin ALias for install
@@ -123,9 +145,6 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
         print("Plugin %s installed" % plugin_name)
     except Exception as e:
         print("InstallPluing: ", e)
-
-
-
 
 def main(argv):
 
@@ -153,10 +172,10 @@ def main(argv):
              tmpdir = arg
 
     if (tmpdir == None) or (tmpdir == ''):
-           tmpdir= "/tmp/pytinstall"
+           tmpdir= TMP_FOLDER
 
     if (biserver_home == None) or (biserver_home == ''):
-       biserver_home = "/opt/pentaho/biserver-ce/"
+        biserver_home = BISERVER_HOME
 
 
     installPlugin(plugin_name, tmpdir, biserver_home)

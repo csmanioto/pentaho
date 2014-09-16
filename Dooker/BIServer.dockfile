@@ -49,14 +49,15 @@ RUN HOSTNAME=$(`echo hostname`) && sed -i "s/node1/node-${HOSTNAME}/g" $PENTAHO_
 
 # Plugins 
 RUN pip3 install --upgrade requests zipfile
-RUN /usr/bin/python3 install_plugins.py -p marketplace -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 install_plugins.py -p cdf-pentaho -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 install_plugins.py -p cda-pentaho -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 install_plugins.py -p cde-pentaho -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 install_plugins.py -p cgg-pentaho -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 install_plugins.py -p cfr-pentaho -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 install_plugins.py -p sparkl -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 install_plugins.py -p saiku -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/wget --no-check-certificate https://raw.githubusercontent.com/csmanioto/pentaho/master/Tools/install_plugins.py  -P / -o /dev/null 
+RUN /usr/bin/python3 /install_plugins.py -p marketplace -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p cdf-pentaho -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p cda-pentaho -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p cde-pentaho -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p cgg-pentaho -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p cfr-pentaho -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p sparkl -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p saiku -b /opt/pentaho/biserver-ce/
 
 # Pos instalacao
 RUN /usr/sbin/useradd pentaho

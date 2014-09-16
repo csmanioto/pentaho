@@ -153,30 +153,31 @@ def main(argv):
     tmpdir = ''
 
     try:
-        options, remainder = getopt.getopt(argv,"hp:b:t:",["help","plugin=","bihome=","tmpdir="])
+        key, value = getopt.getopt(argv,"hp:b:t:",["help","plugin=","bihome=","tmpdir="])
     except getopt.GetoptError:
         print("install_plugin.py -p plugin_name -b biserver_home -t tmpdir(optional)")
+        print("install_plugin.py --plugin=plugin_name --bihome=biserver_home --tmpdir=tmpdir(optional)")
         sys.exit(2)
 
-    for opt, arg in options:
+    for opt, arg in key:
          if opt in ('-h', '--help'):
              for key in plugin_select(None):
                  print("Avaliable plugin %s" % key["plugin"])
                  print("install_plugin.py -p plugin_name -b biserver_home -t tmpdir(optional)")
+                 print("install_plugin.py --plugin=plugin_name --bihome=biserver_home --tmpdir=tmpdir(optional)")
                  sys.exit(2)
          if opt in ('-p', '--plugin'):
-             plugin_name = arg
+             plugin_name = value
          if opt in ('-b', '--bihome'):
-             biserver_home = arg
+             biserver_home = value
          if opt in ('-t', '--tmpdir'):
-             tmpdir = arg
+             tmpdir = value
 
     if (tmpdir == None) or (tmpdir == ''):
            tmpdir= TMP_FOLDER
 
     if (biserver_home == None) or (biserver_home == ''):
         biserver_home = BISERVER_HOME
-
 
     installPlugin(plugin_name, tmpdir, biserver_home)
 

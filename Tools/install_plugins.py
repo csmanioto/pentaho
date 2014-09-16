@@ -42,13 +42,14 @@ def makeFolder (folder):
 def removeFolder(folder):
     try:
         print("Removing ", folder)
-        for path in (os.path.join(folder,f) for f in os.listdir(folder)):
-            print(path)
-            if os.path.isdir(path):
-                removeFolder(path)
-            else:
-                os.unlink(path)
-        os.rmdir(folder)
+        if (os.path.isdir(folder)):
+                for path in (os.path.join(folder,f) for f in os.listdir(folder)):
+                    print(path)
+                    if os.path.isdir(path):
+                        removeFolder(path)
+                    else:
+                        os.unlink(path)
+                os.rmdir(folder)
     except IOError as e:
             print("RemoveFolder", e)
             pass

@@ -50,7 +50,7 @@ def removeFolder(folder):
                 os.unlink(path)
         os.rmdir(folder)
     except IOError as e:
-            print(e)
+            print("RemoveFolder", e)
             pass
 
 def unzip(source_filename, dest_dir):

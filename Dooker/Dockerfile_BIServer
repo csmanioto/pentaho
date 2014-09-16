@@ -1,9 +1,5 @@
 FROM  ubuntu:14.04 
-
-
 MAINTAINER Carlos Smanioto csmanioto@gmail.com
-
-
 
 #Atualiza o Ubunut & instala alguns pacotes legais
 RUN apt-get update && apt-get install wget zip unzip git software-properties-common libtcnative-1 python3-pip -y 
@@ -33,7 +29,6 @@ RUN /usr/bin/wget -nv  http://ci.pentaho.com/job/biserver-ce-5.1/lastSuccessfulB
 
 RUN /usr/bin/unzip -q /tmp/biserver-ce-${BISERVER_TAG}.zip -d  $PENTAHO_HOME
 RUN rm -f /tmp/biserver-ce-${BISERVER_TAG}.zip $PENTAHO_HOME/biserver-ce/promptuser.sh
-
 
 # Setup do PostgreSQL para o Tomcat
 RUN apt-get install postgresql-client-9.3 -y

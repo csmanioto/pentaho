@@ -51,7 +51,6 @@ RUN sed -i 's/mondrian.rolap.aggregates.Read=False/mondrian.rolap.aggregates.Rea
 RUN HOSTNAME=$(`echo hostname`) && sed -i "s/node1/node-${HOSTNAME}/g" $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/jackrabbit/repository.xml
 
 # Plugins 
-RUN pip3 install --upgrade requests zipfile
 RUN /usr/bin/wget --no-check-certificate https://raw.githubusercontent.com/csmanioto/pentaho/master/Tools/install_plugins.py  -P / -o /dev/null 
 RUN /usr/bin/python3 /install_plugins.py -p marketplace -b /opt/pentaho/biserver-ce/
 RUN /usr/bin/python3 /install_plugins.py -p cdf-pentaho -b /opt/pentaho/biserver-ce/

@@ -146,6 +146,23 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
     except Exception as e:
         print("InstallPluing: ", e)
 
+
+def displayHelp(exit_status):
+    print("--------------")
+    plugin = ''
+    for key in plugin_select(None):
+        plugin = plugin + ' ' +  key["plugin"]
+
+    print("Avaliable plugins: %s" % plugin)
+    print("--------------")
+
+    print("install_plugin.py -p plugin_name -b biserver_home -t tmpdir(optional)")
+    print("Or full form :) ")
+    print("install_plugin.py --plugin=plugin_name --bihome=biserver_home --tmpdir=tmpdir(optional)")
+
+    sys.exit(exit_status)
+
+
 def main(argv):
 
     plugin_name = ''
@@ -153,19 +170,19 @@ def main(argv):
     tmpdir = ''
 
     try:
-        key, value = getopt.getopt(argv,"hp:b:t:",["help","plugin=","bihome=","tmpdir="])
+        paramenters, values = getopt.getopt(argv,"hp:b:t:",["help","plugin=","bihome=","tmpdir="])
     except getopt.GetoptError:
-        print("install_plugin.py -p plugin_name -b biserver_home -t tmpdir(optional)")
-        print("install_plugin.py --plugin=plugin_name --bihome=biserver_home --tmpdir=tmpdir(optional)")
-        sys.exit(2)
+        displayHelp(2)
 
-    for opt, arg in key:
+
+
+    if len(paramenters) == 0:
+        displayHelp(2)
+
+
+    for opt, arg in paramenters:
          if opt in ('-h', '--help'):
-             for key in plugin_select(None):
-                 print("Avaliable plugin %s" % key["plugin"])
-                 print("install_plugin.py -p plugin_name -b biserver_home -t tmpdir(optional)")
-                 print("install_plugin.py --plugin=plugin_name --bihome=biserver_home --tmpdir=tmpdir(optional)")
-                 sys.exit(2)
+            help
          if opt in ('-p', '--plugin'):
              plugin_name = value
          if opt in ('-b', '--bihome'):
@@ -179,7 +196,7 @@ def main(argv):
     if (biserver_home == None) or (biserver_home == ''):
         biserver_home = BISERVER_HOME
 
-    installPlugin(plugin_name, tmpdir, biserver_home)
+    #installPlugin(plugin_name, tmpdir, biserver_home)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

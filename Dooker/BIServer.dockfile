@@ -19,7 +19,10 @@ RUN apt-get update && apt-get install oracle-java7-installer -y
 
 ENV PENTAHO_JAVA_HOME /usr/lib/jvm/java-7-oracle
 ENV PENTAHO_HOME /opt/pentaho
-ENV BISERVER_TAG 5.1-SNAPSHOT-jenkins-biserver-ce-5.1-38
+
+#Check the last Build in http://ci.pentaho.com/view/x5.1x/job/biserver-ce-5.1/
+ENV BISERVER_TAG 5.1-SNAPSHOT-jenkins-biserver-ce-5.1-41
+
 ENV INSTALL_PLUGIN_DEV marketplace,cdf,cda,cde,cgg,sparkl 
 ENV INSTALL_PLUGIN_STABLE saiku
 ENV BISERVER_CATALINA_OPTS -Dfile.encoding=utf-8 -Xms4096m -Xmx6114m -XX:MaxPermSize=256m -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000

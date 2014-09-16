@@ -158,7 +158,7 @@ def main(argv):
         print("install_plugin.py -p plugin_name -b biserver_home -t tmpdir(optional)")
         sys.exit(2)
 
-     for opt, arg in options:
+    for opt, arg in options:
          if opt in ('-h', '--help'):
              for key in plugin_select(None):
                  print("Avaliable plugin %s" % key["plugin"])

@@ -1,0 +1,87 @@
+FROM  ubuntu:14.04 
+
+
+MAINTAINER Carlos Smanioto csmanioto@gmail.com
+
+
+
+#Atualiza o Ubunut & instala alguns pacotes legais
+RUN apt-get update && apt-get install wget zip unzip git software-properties-common libtcnative-1 python3-pip -y 
+
+# # # #
+# JAVA
+ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
+RUN add-apt-repository -y ppa:webupd8team/java
+RUN echo "oracle-java7-installer shared/accepted-oracle-license-v1-1 select true" | /usr/bin/debconf-set-selections
+RUN apt-get update && apt-get install oracle-java7-installer -y
+
+
+# # # #
+# PETAHO BI-SERVER
+# curl http://ci.pentaho.com/view/x5.1x/job/biserver-ce-5.1/lastSuccessfulBuild/artifact/assembly/dist/|grep "<title>biserver-ce-5.1" |awk '{ print $1,$2 }' |sed 's/<title>//g'|sed 's/ \#/-/g')
+
+
+ENV PENTAHO_JAVA_HOME /usr/lib/jvm/java-7-oracle
+ENV PENTAHO_HOME /opt/pentaho
+ENV BISERVER_TAG 5.1-SNAPSHOT-jenkins-biserver-ce-5.1-38
+ENV INSTALL_PLUGIN_DEV marketplace,cdf,cda,cde,cgg,sparkl 
+ENV INSTALL_PLUGIN_STABLE saiku
+ENV BISERVER_CATALINA_OPTS -Dfile.encoding=utf-8 -Xms4096m -Xmx6114m -XX:MaxPermSize=256m -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000
+
+# Download e instalacao do Pentaho
+RUN /usr/bin/wget -nv  http://ci.pentaho.com/job/biserver-ce-5.1/lastSuccessfulBuild/artifact/assembly/dist/biserver-ce-${BISERVER_TAG}.zip -O /tmp/biserver-ce-${BISERVER_TAG}.zip 
+
+RUN /usr/bin/unzip -q /tmp/biserver-ce-${BISERVER_TAG}.zip -d  $PENTAHO_HOME
+RUN rm -f /tmp/biserver-ce-${BISERVER_TAG}.zip $PENTAHO_HOME/biserver-ce/promptuser.sh
+
+
+# Setup do PostgreSQL para o Tomcat
+RUN apt-get install postgresql-client-9.3 -y
+RUN /usr/bin/wget -nv  jdbc.postgresql.org/download/postgresql-9.3-1102.jdbc4.jar -O /usr/share/java/postgresql-9.3-1102.jdbc4.jar
+RUN ln -sf /usr/share/java/postgresql-9.3-1102.jdbc4.jar /usr/share/java/postgresql-9.3-jdbc4.jar
+RUN ln -sf /usr/share/java/postgresql-9.3-jdbc4.jar $PENTAHO_HOME/biserver-ce/tomcat/lib/postgresql-9.3-jdbc4.jar
+RUN rm -f $PENTAHO_HOME/biserver-ce/tomcat/lib/postgresql-9.1*
+
+# Motrian
+RUN echo "mondrian­.­util­.­memoryMonitor­.­enable=true" >> $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/mondrian/mondrian.properties
+RUN sed -i 's/mondrian.rolap.aggregates.Use=false/mondrian.rolap.aggregates.Use=true/g' $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/mondrian/mondrian.properties
+RUN sed -i 's/mondrian.rolap.aggregates.Use=False/mondrian.rolap.aggregates.Use=true/g' $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/mondrian/mondrian.properties
+RUN sed -i 's/mondrian.rolap.aggregates.Read=false/mondrian.rolap.aggregates.Read=true/g' $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/mondrian/mondrian.properties
+RUN sed -i 's/mondrian.rolap.aggregates.Read=False/mondrian.rolap.aggregates.Read=true/g' $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/mondrian/mondrian.properties
+
+# jackrabbit
+RUN HOSTNAME=$(`echo hostname`) && sed -i "s/node1/node-${HOSTNAME}/g" $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/jackrabbit/repository.xml
+
+# Plugins 
+RUN pip3 install --upgrade requests zipfile
+RUN /usr/bin/python3 install_plugins.py -p marketplace -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 install_plugins.py -p cdf-pentaho -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 install_plugins.py -p cda-pentaho -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 install_plugins.py -p cde-pentaho -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 install_plugins.py -p cgg-pentaho -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 install_plugins.py -p cfr-pentaho -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 install_plugins.py -p sparkl -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 install_plugins.py -p saiku -b /opt/pentaho/biserver-ce/
+
+
+
+ marketplace cdf-pentaho cda-pentaho cde-pentaho cgg-pentaho cfr-pentaho sparkl saiku
+# Pos instalacao
+RUN /usr/sbin/useradd pentaho
+RUN /bin/chown pentaho:pentaho $PENTAHO_HOME -R
+
+#  Faz o catalina iniciar e primeiro plano
+RUN sed -i -e 's/\(exec ".*"\) start/\1 run/' /opt/pentaho/biserver-ce/tomcat/bin/startup.sh && chmod +x $PENTAHO_HOME/biserver-ce/start-pentaho.sh
+
+# Otimiza do java
+RUN sed -i s'/CATALINA_OPTS="-Xms1024m -Xmx2048m -XX:MaxPermSize=256m -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000"'/'CATALINA_OPTS="$BISERVER_CATALINA_OPTS"'/g  $PENTAHO_HOME/biserver-ce/start-pentaho.sh 
+
+# Make a run.sh
+RUN echo "#!/bin/bash" > /run.sh
+RUN echo "sh $PENTAHO_HOME/biserver-ce/start-pentaho.sh" >> /run.sh
+run chmod +x /run.sh
+
+EXPOSE 80
+EXPOSE 8080
+
+CMD ["./run.sh"]

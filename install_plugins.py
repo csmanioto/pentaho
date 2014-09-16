@@ -84,12 +84,15 @@ def download(url, dst_filename, output_folder):
         response = requests.get(url, stream=True)
         print("Download " + url + " on " + full_output)
         if response.status_code == 200:
-             with open(full_output, 'w') as f:
-                for fdownload in response.iter_content():
-                    f.write(fdownload)
+            print("Starting download...")
+            with open(full_output, 'wb') as f:
+                for block in response.iter_content(1024):
+                    if not block:
+                        break
+                    f.write(block)
         return full_output
     except requests.ConnectionError as e:
-        print("download: " + e)
+        print("download: ", e)
 
 
 def installPlugin (plugin_name, tmp_folder, biserver_folder):

@@ -18,6 +18,7 @@ def removeFolder(folder):
     try:
         for path in (os.path.join(folder,f) for f in os.listdir(folder)):
             if os.path.isdir(path):
+                print("Removing ", folder)
                 removeFolder(folder)
             else:
                 os.unlink(path)
@@ -115,4 +116,5 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
         print("InstallPluing: ", e)
 
 
-installPlugin("marketplace", "/tmp/", "/opt/pentaho/biserver-ce/")
+
+installPlugin("marketplace", "/tmp/pytinstall", "/opt/pentaho/biserver-ce/")

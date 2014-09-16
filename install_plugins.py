@@ -30,6 +30,7 @@ def removeFolder(folder):
 
 def unzip(source_filename, dest_dir):
     try:
+        print("Unziping... ", source_filename)
         with zipfile.ZipFile(source_filename) as zf:
             for member in zf.infolist():
                 # Path traversal defense copied from

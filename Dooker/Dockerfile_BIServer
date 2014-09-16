@@ -63,9 +63,6 @@ RUN /usr/bin/python3 install_plugins.py -p cfr-pentaho -b /opt/pentaho/biserver-
 RUN /usr/bin/python3 install_plugins.py -p sparkl -b /opt/pentaho/biserver-ce/
 RUN /usr/bin/python3 install_plugins.py -p saiku -b /opt/pentaho/biserver-ce/
 
-
-
- marketplace cdf-pentaho cda-pentaho cde-pentaho cgg-pentaho cfr-pentaho sparkl saiku
 # Pos instalacao
 RUN /usr/sbin/useradd pentaho
 RUN /bin/chown pentaho:pentaho $PENTAHO_HOME -R

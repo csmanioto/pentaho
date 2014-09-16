@@ -16,9 +16,10 @@ def makeFolder (folder):
 
 def removeFolder(folder):
     try:
+        print("Removing ", folder)
         for path in (os.path.join(folder,f) for f in os.listdir(folder)):
+            print(path)
             if os.path.isdir(path):
-                print("Removing ", folder)
                 removeFolder(folder)
             else:
                 os.unlink(path)

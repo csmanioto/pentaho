@@ -1,4 +1,4 @@
-import requests, zipfile,os.path
+import requests, zipfile,os, sys, getopt
 
 JENKINS = "http://ci.pentaho.com/job"
 JENKINS_TRUNK = "lastSuccessfulBuild/artifact"
@@ -70,6 +70,8 @@ def plugin_select(plugin_name):
     for key in dict:
         if (key["plugin"] == plugin_name)  or (key["pluginalias"] == plugin_name):
             return key
+        else:
+            return dict
 
 
 def download(url, dst_filename, output_folder):
@@ -124,4 +126,40 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
 
 
 
-installPlugin("marketplace", "/tmp/pytinstall", "/opt/pentaho/biserver-ce/")
+
+def main(argv):
+
+    plugin_name = ''
+    biserver_home = ''
+    tmpdir = ''
+
+    try:
+        options, remainder = getopt.getopt(argv,"hp:b:t:",["help","plugin=","bihome=","tmpdir="])
+    except getopt.GetoptError:
+        print("install_plugin.py -p plugin_name -b biserver_home -t tmpdir(optional)")
+        sys.exit(2)
+
+     for opt, arg in options:
+         if opt in ('-h', '--help'):
+             for key in plugin_select(None):
+                 print("Avaliable plugin %s" % key["plugin"])
+                 print("install_plugin.py -p plugin_name -b biserver_home -t tmpdir(optional)")
+                 sys.exit(2)
+         if opt in ('-p', '--plugin'):
+             plugin_name = arg
+         if opt in ('-b', '--bihome'):
+             biserver_home = arg
+         if opt in ('-t', '--tmpdir'):
+             tmpdir = arg
+
+    if (tmpdir == None) or (tmpdir == ''):
+           tmpdir= "/tmp/pytinstall"
+
+    if (biserver_home == None) or (biserver_home == ''):
+       biserver_home = "/opt/pentaho/biserver-ce/"
+
+
+    installPlugin(plugin_name, tmpdir, biserver_home)
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

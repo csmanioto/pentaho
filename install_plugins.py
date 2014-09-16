@@ -26,6 +26,7 @@ def removeFolder(folder):
         os.rmdir(folder)
     except IOError as e:
             print(e)
+            pass
 
 def unzip(source_filename, dest_dir):
     try:

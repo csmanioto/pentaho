@@ -182,7 +182,7 @@ def main(argv):
 
     for opt, arg in paramenters:
          if opt in ('-h', '--help'):
-            help
+             displayHelp(2)
          if opt in ('-p', '--plugin'):
              plugin_name = arg
          if opt in ('-b', '--bihome'):

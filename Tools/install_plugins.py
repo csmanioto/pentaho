@@ -53,7 +53,7 @@ def removeFolder(folder):
     except IOError as e:
             print("RemoveFolder", e)
             pass
-
+'''
 def unzip(source_filename, dest_dir):
     try:
         print("Unziping  %s on %s" % (source_filename, dest_dir))
@@ -71,6 +71,18 @@ def unzip(source_filename, dest_dir):
                 zf.extract(member, path)
     except OSError as e:
         print("unzip: ", e)
+'''
+def Unzip(source_filename, dest_dir):
+        zip = zipfile.ZipFile(source_filename,'r')
+        zip.extractall(dest_dir)
+
+def extractAll(zipName):
+    z = zip(zipName)
+    for f in z.namelist():
+        if f.endswith('/'):
+            os.makedirs(f)
+        else:
+            z.extract(f)
 
 def plugin_select(plugin_name):
 
@@ -143,7 +155,7 @@ def installPlugin (plugin_name, tmp_folder, biserver_folder):
         _system_folder = biserver_folder + 'pentaho-solutions/system'
         downloaded_file = download(plugin_url, 'plugin.zip', makeFolder(tmp_folder + '/' + plugin_name ))
         removeFolder(_system_folder + '/' + plugin_name)
-        unzip(downloaded_file, _system_folder)
+        Unzip(downloaded_file, _system_folder)
         print("Plugin %s installed" % plugin_name)
     except Exception as e:
         print("InstallPluing: ", e)

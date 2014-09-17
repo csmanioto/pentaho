@@ -140,6 +140,9 @@ def download(url, dst_filename, output_folder):
     except requests.ConnectionError as e:
         print("download: ", e)
 
+def registerPlugin():
+
+
 def installPlugin (plugin_name, tmp_folder, biserver_folder):
     """
     :param plugin_name: Plugin ou Plugin ALias for install

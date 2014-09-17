@@ -52,14 +52,14 @@ RUN HOSTNAME=$(`echo hostname`) && sed -i "s/node1/node-${HOSTNAME}/g" $PENTAHO_
 
 # Plugins 
 RUN /usr/bin/wget --no-check-certificate https://raw.githubusercontent.com/csmanioto/pentaho/master/Tools/install_plugins.py  -P / -o /dev/null 
-RUN /usr/bin/python3 /install_plugins.py -p marketplace -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 /install_plugins.py -p cdf-pentaho -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 /install_plugins.py -p cda-pentaho -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 /install_plugins.py -p cde-pentaho -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 /install_plugins.py -p cgg-pentaho -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 /install_plugins.py -p cfr-pentaho -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 /install_plugins.py -p sparkl -b /opt/pentaho/biserver-ce/
-RUN /usr/bin/python3 /install_plugins.py -p saiku -b /opt/pentaho/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p marketplace -b $PENTAHO_HOME/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p cdf-pentaho -b $PENTAHO_HOME/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p cda-pentaho -b $PENTAHO_HOME/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p cde-pentaho -b $PENTAHO_HOME/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p cgg-pentaho -b $PENTAHO_HOME/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p cfr-pentaho -b $PENTAHO_HOME/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p sparkl -b $PENTAHO_HOME/biserver-ce/
+RUN /usr/bin/python3 /install_plugins.py -p saiku -b $PENTAHO_HOME/biserver-ce/
 
 # Pos instalacao
 RUN /usr/sbin/useradd pentaho
@@ -71,6 +71,16 @@ RUN sed -i -e 's/\(exec ".*"\) start/\1 run/' /opt/pentaho/biserver-ce/tomcat/bi
 # Otimiza do java
 RUN sed -i s'/CATALINA_OPTS="-Xms1024m -Xmx2048m -XX:MaxPermSize=256m -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000"'/'CATALINA_OPTS="$BISERVER_CATALINA_OPTS"'/g  $PENTAHO_HOME/biserver-ce/start-pentaho.sh 
 
+
+# Enable Tomcat Native 
+RUN apt-get install build-essential libapr1 libaprutil1 libapr1-dev libssl-dev ant
+RUN cp $PENTAHO_HOME/biserver-ce/tomcat/bin/tomcat-native.tar.gz /tmp
+RUN cd /tmp && unzip tomcat-native.tar.gz
+RUN cd /tmp/tomcat-native-1.1.27-src/jni/native && ./configure --with-apr=/usr/bin/apr-1-config --with-java-home=$PENTAHO_JAVA_HOME
+RUN cd /tmp/tomcat-native-1.1.27-src/jni/native && make all install
+RUN ln -sf /usr/local/apr/lib/libtcnative-1.so /usr/lib/libtcnative-1.so
+
+
 # Make a run.sh
 RUN echo "#!/bin/bash" > /run.sh
 RUN echo "sh $PENTAHO_HOME/biserver-ce/start-pentaho.sh" >> /run.sh
@@ -78,5 +88,6 @@ run chmod +x /run.sh
 
 EXPOSE 80
 EXPOSE 8080
+EXPOSE 8443
 
 CMD ["./run.sh"]

@@ -1,0 +1,64 @@
+FROM csmanioto/biserver:default
+
+
+MAINTAINER Carlos Eduardo Smanioto csmanioto@gmail.com
+
+ENV POSTGRESQLHOST srv_pgsql.company.com
+ENV ZABBIXSERVER srv_zabbix.company.com
+
+# context.xml
+RUN sed -i s/"org.hsqldb.jdbcDriver"/"org.postgresql.Driver"/g $PENTAHO_HOME/biserver-ce/tomcat/webapps/pentaho/META-INF/context.xml
+RUN sed -i s/"jdbc:hsqldb:hsql:\/\/localhost\/hibernate"/"jdbc:postgresql:\/\/${POSTGRESQLHOST}:5432\/hibernate"/g $PENTAHO_HOME/biserver-ce/tomcat/webapps/pentaho/META-INF/context.xml
+RUN sed -i s/"select count(\*) from INFORMATION_SCHEMA.SYSTEM_SEQUENCES"/"select 1"/g $PENTAHO_HOME/biserver-ce/tomcat/webapps/pentaho/META-INF/context.xml
+RUN sed -i s/"org.hsqldb.jdbcDriver"/"org.postgresql.Driver"/g $PENTAHO_HOME/biserver-ce/tomcat/webapps/pentaho/META-INF/context.xml
+RUN sed -i s/"jdbc:hsqldb:hsql:\/\/localhost\/quartz"/"jdbc:postgresql:\/\/${POSTGRESQLHOST}:5432\/quartz"/g $PENTAHO_HOME/biserver-ce/tomcat/webapps/pentaho/META-INF/context.xml
+RUN sed -i s/"select count(\*) from INFORMATION_SCHEMA.SYSTEM_SEQUENCES"/"select 1"/g $PENTAHO_HOME/biserver-ce/tomcat/webapps/pentaho/META-INF/context.xml
+
+# applicationContext-spring-security-hibernate.properties
+RUN sed -i s/"org.hsqldb.jdbcDriver"/"org.postgresql.Driver"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/applicationContext-spring-security-hibernate.properties
+RUN sed -i s/"jdbc.url=jdbc:hsqldb:hsql:\/\/localhost:9001\/hibernate"/"jdbc.url=jdbc:postgresql:\/\/${POSTGRESQLHOST}:5432\/hibernate"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/applicationContext-spring-security-hibernate.properties
+
+# hibernate-settings.xml
+RUN sed -i s/"system\/hibernate\/hsql.hibernate.cfg.xml"/"system\/hibernate\/postgresql.hibernate.cfg.xml"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/hibernate/hibernate-settings.xml
+RUN sed -i s/"localhost:5432"/"${POSTGRESQLHOST}:5432"/g  $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/hibernate/postgresql.hibernate.cfg.xml
+
+#jdbc.properties
+RUN sed -i s/"Hibernate\/driver=org.hsqldb.jdbcDriver"/"Hibernate\/driver=org.postgresql.Driver"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"Hibernate\/url=jdbc:hsqldb:hsql:\/\/localhost\/hibernate"/"Hibernate\/url=jdbc:postgresql:\/\/${POSTGRESQLHOST}:5432\/hibernate"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"SampleData\/type=javax.sql.DataSource"/"#SampleData\/type=javax.sql.DataSource"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"SampleData\/driver=org.hsqldb.jdbcDriver"/"#SampleData\/driver=org.hsqldb.jdbcDriver"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"SampleData\/url=jdbc:hsqldb:hsql:\/\/localhost\/sampledata"/"#SampleData\/url=jdbc:hsqldb:hsql:\/\/localhost\/sampledata"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"SampleData\/user=pentaho_user"/"#SampleData\/user=pentaho_user"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"SampleData\/password=password"/"#SampleData\/password=password"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"Quartz\/driver=org.hsqldb.jdbcDriver"/"Quartz\/driver=org.postgresql.Driver"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"Quartz\/url=jdbc:hsqldb:hsql:\/\/localhost\/quartz"/"Quartz\/url=jdbc:postgresql:\/\/${POSTGRESQLHOST}:5432\/quartz"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"Shark\/type=javax.sql.DataSource"/"Shark\/driver=org.postgresql.Driver"/g  $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"Shark\/url=jdbc:hsqldb:hsql:\/\/localhost\/shark"/"Shark\/url=jdbc:postgresql:\/\/${POSTGRESQLHOST}:5432\/shark"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"Shark\/user=sa"/"Shark\/user=pentaho_user"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"Shark\/password="/"Shark\/password=password"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"SampleDataAdmin\/type=javax.sql.DataSource"/"#SampleDataAdmin\/type=javax.sql.DataSource"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"SampleDataAdmin\/driver=org.hsqldb.jdbcDriver"/"#SampleDataAdmin\/driver=org.hsqldb.jdbcDriver"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"SampleDataAdmin\/url=jdbc:hsqldb:hsql:\/\/localhost\/sampledata"/"#SampleDataAdmin\/url=jdbc:hsqldb:hsql:\/\/localhost\/sampledata"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"SampleDataAdmin\/user=pentaho_admin"/"#SampleDataAdmin\/user=pentaho_admin"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+RUN sed -i s/"Sample/DataAdmin\/password=password"/"#SampleDataAdmin\/password=password"/g $PENTAHO_HOME/biserver-ce/pentaho-solutions/system/simple-jndi/jdbc.properties
+
+
+# Instalacao do zabbix
+RUN apt-get install zabbix-agent -y
+RUN sed -i s'/ServerActive=127.0.0.1/ServerActive=$ZABBIXSERVERg' /etc/zabbix/zabbix_agentd.conf
+RUN sed -i s'/Server=127.0.0.1/Server=$ZABBIXSERVER/g' /etc/zabbix/zabbix_agentd.conf
+RUN sed -i s/Hostname=Zabbix/\#Hostname=/g /etc/zabbix/zabbix_agentd.conf
+RUN sed -i s/'# HostnameItem/\HostnameItem/g' /etc/zabbix/zabbix_agentd.conf
+RUN sed -i s/'Hostname=Zabbix server/\#Hostname=/g' /etc/zabbix/zabbix_agentd.conf
+
+# Make a run.sh
+RUN echo "#!/bin/bash" > /run.sh
+RUN echo "sh /etc/init.d/zabbix-agent start" >> /run.sh
+RUN echo "sh $PENTAHO_HOME/biserver-ce/start-pentaho.sh" >> /run.sh
+run chmod +x /run.sh
+
+EXPOSE 80
+EXPOSE 8080
+EXPOSE 1050
+
+CMD ["./run.sh"]

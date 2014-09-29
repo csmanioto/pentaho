@@ -74,12 +74,11 @@ RUN sed -i s'/CATALINA_OPTS="-Xms1024m -Xmx2048m -XX:MaxPermSize=256m -Dsun.rmi.
 
 
 # Enable Tomcat Native 
-RUN apt-get install build-essential libapr1 libaprutil1 libapr1-dev libssl-dev ant -y
-RUN cp $PENTAHO_HOME/biserver-ce/tomcat/bin/tomcat-native.tar.gz /tmp
-RUN cd /tmp && unzip tomcat-native.tar.gz
-RUN cd /tmp/tomcat-native-1.1.27-src/jni/native && ./configure --with-apr=/usr/bin/apr-1-config --with-java-home=$PENTAHO_JAVA_HOME
-RUN cd /tmp/tomcat-native-1.1.27-src/jni/native && make all install
-RUN ln -sf /usr/local/apr/lib/libtcnative-1.so /usr/lib/libtcnative-1.so
+# RUN cp $PENTAHO_HOME/biserver-ce/tomcat/bin/tomcat-native.tar.gz /tmp
+# RUN cd /tmp && unzip tomcat-native.tar.gz
+# RUN cd /tmp/tomcat-native-1.1.27-src/jni/native && ./configure --with-apr=/usr/bin/apr-1-config --with-java-home=$PENTAHO_JAVA_HOME
+# RUN cd /tmp/tomcat-native-1.1.27-src/jni/native && make all install
+# RUN ln -sf /usr/local/apr/lib/libtcnative-1.so /usr/lib/libtcnative-1.so
 
 
 # Make a run.sh

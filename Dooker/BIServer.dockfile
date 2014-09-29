@@ -53,22 +53,14 @@ RUN HOSTNAME=$(`echo hostname`) && sed -i "s/node1/node-${HOSTNAME}/g" $PENTAHO_
 # Plugins 
 RUN /usr/bin/wget --no-check-certificate https://raw.githubusercontent.com/csmanioto/pentaho/master/Tools/install_plugins.py  -P / -o /dev/null 
 RUN /usr/bin/python3 /install_plugins.py -p marketplace -b $PENTAHO_HOME/biserver-ce/
-<<<<<<< HEAD
 RUN /usr/bin/python3 /install_plugins.py -p sparkl -b $PENTAHO_HOME/biserver-ce/
 RUN /usr/bin/python3 /install_plugins.py -p saiku -b $PENTAHO_HOME/biserver-ce/
-=======
->>>>>>> FETCH_HEAD
 RUN /usr/bin/python3 /install_plugins.py -p cdf-pentaho -b $PENTAHO_HOME/biserver-ce/
 RUN /usr/bin/python3 /install_plugins.py -p cda-pentaho -b $PENTAHO_HOME/biserver-ce/
 RUN /usr/bin/python3 /install_plugins.py -p cde-pentaho -b $PENTAHO_HOME/biserver-ce/
 RUN /usr/bin/python3 /install_plugins.py -p cgg-pentaho -b $PENTAHO_HOME/biserver-ce/
 RUN /usr/bin/python3 /install_plugins.py -p cfr-pentaho -b $PENTAHO_HOME/biserver-ce/
-<<<<<<< HEAD
 
-=======
-RUN /usr/bin/python3 /install_plugins.py -p sparkl -b $PENTAHO_HOME/biserver-ce/
-RUN /usr/bin/python3 /install_plugins.py -p saiku -b $PENTAHO_HOME/biserver-ce/
->>>>>>> FETCH_HEAD
 
 # Pos instalacao
 RUN /usr/sbin/useradd pentaho
@@ -82,11 +74,7 @@ RUN sed -i s'/CATALINA_OPTS="-Xms1024m -Xmx2048m -XX:MaxPermSize=256m -Dsun.rmi.
 
 
 # Enable Tomcat Native 
-<<<<<<< HEAD
 RUN apt-get install build-essential libapr1 libaprutil1 libapr1-dev libssl-dev ant -y
-=======
-RUN apt-get install build-essential libapr1 libaprutil1 libapr1-dev libssl-dev ant
->>>>>>> FETCH_HEAD
 RUN cp $PENTAHO_HOME/biserver-ce/tomcat/bin/tomcat-native.tar.gz /tmp
 RUN cd /tmp && unzip tomcat-native.tar.gz
 RUN cd /tmp/tomcat-native-1.1.27-src/jni/native && ./configure --with-apr=/usr/bin/apr-1-config --with-java-home=$PENTAHO_JAVA_HOME
